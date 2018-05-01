@@ -1,11 +1,8 @@
-import sys
-
-def cent_map(inString, inPassword):
+def encrypt(inString, inPassword):
 	prime = 127
 	n = len(inString)
-
-	p = inString
-	t = inPassword
+	p = [ord(i) for i in inString]
+	t = [ord(i) for i in inPassword]
 	r = 0
 
 
@@ -42,11 +39,11 @@ def cent_map(inString, inPassword):
 	return l
 
 
-def cent_map_inv(inString, inPassword):
+def decrypt(inString, inPassword):
 	prime = 127
 	n = len(inString)
-	c = inString
-	t = inPassword
+	c = [ord(i) for i in inString]
+	t = [ord(i) for i in inPassword]
 	r = 0
 	l = [None] * (n)
 	p = [None] * (n)
@@ -90,36 +87,12 @@ def cent_map_inv(inString, inPassword):
 	return p
 
 
-def encrypt(plaintext, password):
-	return cent_map(plaintext, password)
 
-
-def decrypt(ciphertext, password):
-	return cent_map_inv(ciphertext, password)
-
-
-
-
-pt = [0x97, 0x98, 0x99, 0xa0, 0xa1, 0xa2]
-passw = [0x01, 0x02, 0x02, 0x04, 0x05, 0x06]
-
-a = cent_map(pt, passw)
-print [chr(i) for i in a]
-print [chr(i) for i in cent_map_inv(a, passw)]
-
-
-
-sys.exit()
-pt = "\x97\x98\x99\xa0\x0a"
-passw = "\x01\x02\x03"
-
-a = encrypt(pt, passw)
+a = encrypt("abcdefg\n", "PASSWORD")
 print a
-#b =  [hex(i) for i in a]
-c = decrypt(a,passw)
+b =  [chr(i) for i in a]
+c = decrypt(b,"PASSWORD")
 print c
 d = [chr(i) for i in c]
 print d
 #print [chr(i) for i in decrypt(enc, "PASSWORD")]
-
-
