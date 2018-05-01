@@ -1,7 +1,9 @@
 import sys
 import numpy as np
 
+#Encrypt - central map
 def encrypt(inString, inPassword):
+	#127 didn't work when I switched to using bytes
 	prime = 257
 	n = len(inString)
 	p = inString
@@ -12,12 +14,8 @@ def encrypt(inString, inPassword):
 
 
 	l = [None] * (n)
-	#Remember to decrement by one to be zero aligned for the array
 	for i in range(len(t)):
-		#Changed this to be the size of the inString instead of the length of the password.
-
 		if r == 0:
-			#print "before l: " + str(l)
 			l[1] = (p[1] + t[i]) % prime
 			l[2] = (p[2] + p[1] * l[1]) % prime 
 			l[3] = (p[3] + p[1] * l[2]) % prime
@@ -27,9 +25,7 @@ def encrypt(inString, inPassword):
 				else:
 					l[j] = (p[j] + p[j-2] * l[1]) % prime
 			r = 1
-			#print "after l: " + str(l)
 		else:
-			#print "before p: " + str(p)
 			p[1] = (l[1] + t[i]) % prime
 			p[2] = (l[2] - p[1] * l[1]) % prime
 			p[3] = (l[3] - p[1] * l[2]) % prime
@@ -43,7 +39,7 @@ def encrypt(inString, inPassword):
 		return p
 	return l
 
-
+#Decrypt - central map
 def decrypt(inString, inPassword):
 	prime = 257
 	n = len(inString)
@@ -62,12 +58,8 @@ def decrypt(inString, inPassword):
 		r = 1
 		l = c
 
-	#Remember to decrement by one to be zero aligned for the array
 	for i in range(len(t)-1, -1, -1):
-		#Changed this to be the size of the inString instead of the length of the password.
-
 		if r == 0:
-			#print "before l: " + str(l)
 			l[1] = (p[1] - t[i]) % prime
 			l[2] = (p[2] + p[1] * l[1]) % prime 
 			l[3] = (p[3] + p[1] * l[2]) % prime
@@ -77,9 +69,7 @@ def decrypt(inString, inPassword):
 				else:
 					l[j] = (p[j] + p[j-2] * l[1]) % prime
 			r = 1
-			#print "after l: " + str(l)
 		else:
-			#print "before p: " + str(p)
 			p[1] = (l[1] - t[i]) % prime
 			p[2] = (l[2] - p[1] * l[1]) % prime
 			p[3] = (l[3] - p[1] * l[2]) % prime
@@ -147,21 +137,6 @@ def dec(ciphertext, password):
 
 
 def main():
-	'''
-	#Will take in bytes from a file.
-	pt_d = [1,2,3,4,5,6,7,8,8,9,10]
-	passw_d = [1,2,3,1,2,3]
-
-
-	#Reading in a file seems like its going to take longer than I have. :(
-
-	print pt_d
-	a = enc(pt_d, passw_d)
-	print a
-	b = dec(a, passw_d)
-	print b
-	'''
-
 	f = open('file', 'r')
 	a = np.fromfile(f, dtype=np.uint8)
 
@@ -175,47 +150,10 @@ def main():
 	#print pt_d
 	a = enc(pt_d, passw_d)
 	print a
+	
+	#To switch to decrypt use this with the file input
 	b = dec(a, passw_d)
 	#print b
 
 
-
-
-
-
-	sys.exit()
-	with open('file', 'rb') as f:
-		array = []
-		while True:
-			a = f.read(1)
-			if a:
-				array.append(a)
-			else:
-				f.close()
-				print array
-				break
-
-
-
-
 main()
-
-
-sys.exit()
-
-
-pt_a = "abcdefg\n"
-passw_a = "1234"
-
-pt_a = [ord(i) for i in pt_a]
-passw_a = [ord(i) for i in passw_a]
-
-
-print pt_a
-a = encrypt(pt_a, passw_a)
-print a
-c = decrypt(a,passw_a)
-print c
-d = [chr(i) for i in c]
-print d
-#print [chr(i) for i in decrypt(enc, "PASSWORD")]
